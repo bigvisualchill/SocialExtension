@@ -122,9 +122,7 @@ class SocialMediaAutomationEngine {
                     // Try to find a submit button
                     const submitSelectors = [
                         'button[type="submit"]',
-                        'button:contains("Post")',
-                        'button:contains("Tweet")',
-                        'button:contains("Share")',
+
                         '[data-testid*="post"]',
                         '[data-testid*="tweet"]'
                     ];
@@ -539,19 +537,19 @@ class SocialMediaAutomationEngine {
                     submitButton: '[data-testid="comment_submit_button"], button[type="submit"], button[aria-label*="Post comment"]'
                 },
                 followUsers: {
-                    followButton: '[data-testid="follow_button"], button[aria-label*="Follow"], button[data-testid="follow"], button:contains("Follow")'
+                    followButton: '[data-testid="follow_button"], button[aria-label*="Follow"], button[data-testid="follow"]'
                 }
             },
             twitter: {
                 createPost: {
                     postArea: '[data-testid="tweetTextarea_0"], div[data-testid="tweetTextarea_0"], textarea[placeholder*="What\'s happening"], div[contenteditable="true"][data-testid="tweetTextarea_0"]',
-                    postButton: '[data-testid="tweetButton"], button[data-testid="tweetButton"], button[aria-label*="Tweet"], button:contains("Tweet")'
+                    postButton: '[data-testid="tweetButton"], button[data-testid="tweetButton"], button[aria-label*="Tweet"]'
                 },
                 respondToComments: {
                     commentSection: '[data-testid="tweet"], article[data-testid="tweet"], div[data-testid="tweet"]',
                     replyButton: '[data-testid="reply"], button[data-testid="reply"], button[aria-label*="Reply"]',
                     commentInput: '[data-testid="tweetTextarea_0"], div[data-testid="tweetTextarea_0"], textarea[placeholder*="Tweet your reply"], div[contenteditable="true"][data-testid="tweetTextarea_0"]',
-                    submitButton: '[data-testid="tweetButton"], button[data-testid="tweetButton"], button[aria-label*="Tweet"], button:contains("Tweet")'
+                    submitButton: '[data-testid="tweetButton"], button[data-testid="tweetButton"], button[aria-label*="Tweet"]'
                 },
                 searchAndComment: {
                     searchInput: '[data-testid="SearchBox_Search_Input"], input[data-testid="SearchBox_Search_Input"], input[placeholder*="Search"], input[aria-label*="Search"]',
@@ -562,19 +560,19 @@ class SocialMediaAutomationEngine {
                     submitButton: '[data-testid="tweetButton"], button[data-testid="tweetButton"], button[aria-label*="Tweet"]'
                 },
                 followUsers: {
-                    followButton: '[data-testid="follow"], button[data-testid="follow"], button[aria-label*="Follow"], button:contains("Follow")'
+                    followButton: '[data-testid="follow"], button[data-testid="follow"], button[aria-label*="Follow"]'
                 }
             },
             instagram: {
                 createPost: {
                     postArea: 'textarea[placeholder*="Write a caption"], textarea[placeholder*="What\'s on your mind"], div[contenteditable="true"][aria-label*="Write a caption"]',
-                    postButton: 'button[type="submit"], button[aria-label*="Share"], button:contains("Share")'
+                    postButton: 'button[type="submit"], button[aria-label*="Share"]'
                 },
                 respondToComments: {
                     commentSection: '[data-testid="comment"], div[data-testid="comment"], article[data-testid="comment"]',
-                    replyButton: 'button[aria-label*="Reply"], button[data-testid="reply"], button:contains("Reply")',
+                    replyButton: 'button[aria-label*="Reply"], button[data-testid="reply"]',
                     commentInput: 'textarea[placeholder*="Add a comment"], textarea[placeholder*="Write a comment"], div[contenteditable="true"][aria-label*="Add a comment"]',
-                    submitButton: 'button[type="submit"], button[aria-label*="Post"], button:contains("Post")'
+                    submitButton: 'button[type="submit"], button[aria-label*="Post"]'
                 },
                 searchAndComment: {
                     searchInput: 'input[placeholder*="Search"], input[aria-label*="Search"], input[name="q"], input[type="text"], div[role="textbox"], input.x1lugfcp, input._aauy',
@@ -582,23 +580,23 @@ class SocialMediaAutomationEngine {
                     posts: '[data-testid="post"], article[data-testid="post"], div[data-testid="post"], article, div[role="article"], div._ac7v',
                     commentButton: 'button[aria-label*="Comment"], svg[aria-label*="Comment"], div[role="button"][aria-label*="Comment"], button._abl-',
                     commentInput: 'textarea[placeholder*="Add a comment"], textarea[placeholder*="Write a comment"], textarea[aria-label*="Add a comment"], form textarea, textarea._ablz',
-                    submitButton: 'button[type="submit"], button[aria-label*="Post"], div[role="button"]:contains("Post"), button._acan'
+                    submitButton: 'button[type="submit"], button[aria-label*="Post"], button._acan'
                 },
                 followUsers: {
-                    followButton: 'button[aria-label*="Follow"], button[data-testid="follow"], button:contains("Follow")'
+                    followButton: 'button[aria-label*="Follow"], button[data-testid="follow"]'
                 }
             },
 
             youtube: {
                 createPost: {
                     postArea: '#contenteditable-root, div[contenteditable="true"][aria-label*="Add a message"], textarea[placeholder*="Add a message"]',
-                    postButton: '#submit-button, button[aria-label*="Post"], button:contains("Post")'
+                    postButton: '#submit-button, button[aria-label*="Post"]'
                 },
                 respondToComments: {
                     commentSection: '#comment, div[data-testid="comment"], article[data-testid="comment"]',
                     replyButton: '#reply-button, button[aria-label*="Reply"], button[data-testid="reply"]',
                     commentInput: '#contenteditable-root, div[contenteditable="true"][aria-label*="Add a comment"], textarea[placeholder*="Add a comment"]',
-                    submitButton: '#submit-button, button[aria-label*="Post"], button:contains("Post")'
+                    submitButton: '#submit-button, button[aria-label*="Post"]'
                 },
                 searchAndComment: {
                     searchInput: '#search-input input, input[placeholder*="Search"], input[aria-label*="Search"]',
@@ -606,10 +604,10 @@ class SocialMediaAutomationEngine {
                     posts: '#video-title, div[data-testid="video"], article[data-testid="video"]',
                     commentButton: '#reply-button, button[aria-label*="Comment"], button[data-testid="comment"]',
                     commentInput: '#contenteditable-root, div[contenteditable="true"][aria-label*="Add a comment"]',
-                    submitButton: '#submit-button, button[aria-label*="Post"], button:contains("Post")'
+                    submitButton: '#submit-button, button[aria-label*="Post"]'
                 },
                 followUsers: {
-                    followButton: '#subscribe-button, button[aria-label*="Subscribe"], button:contains("Subscribe")'
+                    followButton: '#subscribe-button, button[aria-label*="Subscribe"]'
                 }
             }
         };
