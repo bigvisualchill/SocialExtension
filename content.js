@@ -229,9 +229,38 @@ class SocialMediaAutomationEngine {
         const selectors = this.getSelectors('searchAndComment');
         const { searchQuery, includeTerms, excludeTerms, useAi } = this.settings || {};
         
+        // Special debugging for Instagram
+        if (this.platform === 'instagram') {
+            this.log('Instagram search debug - looking for input elements...', 'info');
+            const allInputs = document.querySelectorAll('input');
+            this.log(`Found ${allInputs.length} input elements on page`, 'info');
+            
+            allInputs.forEach((input, i) => {
+                const placeholder = input.placeholder || '';
+                const ariaLabel = input.getAttribute('aria-label') || '';
+                const type = input.type || '';
+                const className = input.className || '';
+                this.log(`Input ${i}: placeholder="${placeholder}", aria-label="${ariaLabel}", type="${type}", class="${className}"`, 'info');
+            });
+        }
+        
         // Find search input
         const searchInput = await this.waitForElement(selectors.searchInput);
         if (!searchInput) {
+            // Additional debugging for Instagram
+            if (this.platform === 'instagram') {
+                this.log('Instagram search input not found, trying alternative approach...', 'warning');
+                // Try to find any visible input that might be the search
+                const visibleInputs = Array.from(document.querySelectorAll('input')).filter(input => 
+                    input.offsetParent !== null && 
+                    (input.placeholder.toLowerCase().includes('search') || 
+                     input.getAttribute('aria-label')?.toLowerCase().includes('search'))
+                );
+                if (visibleInputs.length > 0) {
+                    this.log(`Found ${visibleInputs.length} potential search inputs`, 'info');
+                    return await this.continueSearchWithInput(visibleInputs[0], selectors, { searchQuery, includeTerms, excludeTerms, useAi });
+                }
+            }
             throw new Error('Could not find search input');
         }
 
@@ -307,6 +336,93 @@ class SocialMediaAutomationEngine {
                 }
 
                 await this.sleep(this.commentDelay); // Delay between different comments
+            } catch (error) {
+                this.log(`Error commenting on post: ${error.message}`, 'warning');
+            }
+        }
+
+        return { success: true, commentedCount, actionCount: this.actionCount };
+    }
+
+    async continueSearchWithInput(searchInput, selectors, { searchQuery, includeTerms, excludeTerms, useAi }) {
+        // Build search term from settings
+        const searchTerm = (searchQuery && searchQuery.trim().length > 0)
+            ? searchQuery.trim()
+            : this.generateSearchTerm();
+        await this.typeText(searchInput, searchTerm);
+        await this.sleep(this.actionDelay);
+
+        // Submit search
+        const searchButton = await this.waitForElement(selectors.searchButton);
+        if (searchButton) {
+            await this.safeClick(searchButton);
+        } else {
+            // Try pressing Enter
+            searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        }
+
+        await this.sleep(this.actionDelay);
+
+        // Platform-specific search handling
+        if (this.platform === 'youtube') {
+            return await this.youtubeSearchAndComment({ selectors, includeTerms, excludeTerms, useAi });
+        }
+
+        // Generic search and comment for other platforms
+        await this.sleep(this.actionDelay);
+
+        const posts = await this.waitForElement(selectors.posts);
+        if (!posts) {
+            throw new Error('No posts found after search');
+        }
+
+        const postElements = document.querySelectorAll(selectors.posts);
+        let commentedCount = 0;
+
+        for (let i = 0; i < Math.min(postElements.length, this.maxActions - this.actionCount); i++) {
+            try {
+                const post = postElements[i];
+                const postText = post.textContent || '';
+
+                if (!this.shouldCommentOnPost(postText, includeTerms, excludeTerms)) {
+                    continue;
+                }
+
+                // Find and click comment button
+                const commentButton = post.querySelector(selectors.commentButton);
+                if (commentButton) {
+                    await this.safeClick(commentButton);
+                    await this.sleep(this.actionDelay);
+
+                    // Find comment input
+                    const commentInput = await this.waitForElement(selectors.commentInput);
+                    if (commentInput) {
+                        // Generate comment
+                        let comment = this.generateCommentResponse();
+                        if (useAi) {
+                            try {
+                                const ai = await this.generateAiComment(postText);
+                                if (ai) comment = ai;
+                            } catch (e) {
+                                this.log(`AI comment failed: ${e.message}`, 'warning');
+                            }
+                        }
+
+                        await this.typeText(commentInput, comment);
+                        await this.sleep(this.actionDelay);
+
+                        // Submit comment
+                        const submitButton = await this.waitForElement(selectors.submitButton);
+                        if (submitButton) {
+                            await this.safeClick(submitButton);
+                            commentedCount++;
+                            this.actionCount++;
+                            this.log(`Commented on post #${this.actionCount}`);
+                        }
+
+                        await this.sleep(this.commentDelay); // Delay between different comments
+                    }
+                }
             } catch (error) {
                 this.log(`Error commenting on post: ${error.message}`, 'warning');
             }
@@ -461,12 +577,12 @@ class SocialMediaAutomationEngine {
                     submitButton: 'button[type="submit"], button[aria-label*="Post"], button:contains("Post")'
                 },
                 searchAndComment: {
-                    searchInput: 'input[placeholder*="Search"], input[aria-label*="Search"], input[name="q"]',
-                    searchButton: 'button[type="submit"], button[aria-label*="Search"]',
-                    posts: '[data-testid="post"], article[data-testid="post"], div[data-testid="post"]',
-                    commentButton: 'button[aria-label*="Comment"], button[data-testid="comment"], button:contains("Comment")',
-                    commentInput: 'textarea[placeholder*="Add a comment"], textarea[placeholder*="Write a comment"]',
-                    submitButton: 'button[type="submit"], button[aria-label*="Post"], button:contains("Post")'
+                    searchInput: 'input[placeholder*="Search"], input[aria-label*="Search"], input[name="q"], input[type="text"], div[role="textbox"], input.x1lugfcp, input._aauy',
+                    searchButton: 'button[type="submit"], button[aria-label*="Search"], svg[aria-label*="Search"], div[role="button"][aria-label*="Search"]',
+                    posts: '[data-testid="post"], article[data-testid="post"], div[data-testid="post"], article, div[role="article"], div._ac7v',
+                    commentButton: 'button[aria-label*="Comment"], svg[aria-label*="Comment"], div[role="button"][aria-label*="Comment"], button._abl-',
+                    commentInput: 'textarea[placeholder*="Add a comment"], textarea[placeholder*="Write a comment"], textarea[aria-label*="Add a comment"], form textarea, textarea._ablz',
+                    submitButton: 'button[type="submit"], button[aria-label*="Post"], div[role="button"]:contains("Post"), button._acan'
                 },
                 followUsers: {
                     followButton: 'button[aria-label*="Follow"], button[data-testid="follow"], button:contains("Follow")'
