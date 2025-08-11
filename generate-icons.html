@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Extension Icons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .icon-container {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            background: white;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Social Media Automation Extension Icons</h1>
+    <p>Click the button below to generate icons for the extension:</p>
+    
+    <button onclick="generateIcons()">Generate Icons</button>
+    
+    <div id="icons"></div>
+
+    <script>
+        function generateIcons() {
+            const sizes = [16, 48, 128];
+            const container = document.getElementById('icons');
+            container.innerHTML = '';
+            
+            sizes.forEach(size => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                // Create gradient background
+                const gradient = ctx.createLinearGradient(0, 0, size, size);
+                gradient.addColorStop(0, '#667eea');
+                gradient.addColorStop(1, '#764ba2');
+                
+                // Fill background
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, size, size);
+                
+                // Add social media icon
+                ctx.fillStyle = 'white';
+                ctx.font = `${size * 0.6}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('📱', size/2, size/2);
+                
+                // Add border
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(0, 0, size, size);
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.download = `icon${size}.png`;
+                link.href = canvas.toDataURL();
+                
+                const div = document.createElement('div');
+                div.className = 'icon-container';
+                div.innerHTML = `
+                    <p>${size}x${size}</p>
+                    <canvas width="${size}" height="${size}"></canvas>
+                    <br>
+                    <a href="${link.href}" download="icon${size}.png">Download</a>
+                `;
+                
+                // Copy canvas content
+                const newCanvas = div.querySelector('canvas');
+                const newCtx = newCanvas.getContext('2d');
+                newCtx.drawImage(canvas, 0, 0);
+                
+                container.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>

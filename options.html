@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Social Automation Options</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 24px; }
+    .card { max-width: 640px; background: #fff; padding: 16px; border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,.06); }
+    h1 { font-size: 18px; margin: 0 0 12px; }
+    label { display:block; font-size: 12px; color:#555; margin: 12px 0 6px; }
+    input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+    .row { display:flex; gap:12px; }
+    .row > div { flex:1; }
+    .btn { margin-top: 16px; padding:10px 16px; border:0; border-radius:8px; background:#667eea; color:#fff; cursor:pointer; }
+    .hint { font-size: 12px; color:#777; margin-top:6px; }
+    .success { color: #1b8f3e; font-size: 12px; }
+    .error { color: #c0392b; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>AI Assistant Configuration</h1>
+    <label for="apiKey">OpenAI API Key</label>
+    <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off" />
+    <div class="hint">Stored locally via chrome.storage.local</div>
+
+    <label for="assistantId">Assistant ID</label>
+    <input id="assistantId" type="text" placeholder="asst_..." />
+
+    <div class="row">
+      <div>
+        <label for="defaultSearchQuery">Default Search Query</label>
+        <input id="defaultSearchQuery" type="text" placeholder="e.g. productivity tips OR from:@elonmusk" />
+      </div>
+      <div>
+        <label for="commentStyle">Comment Style</label>
+        <input id="commentStyle" type="text" placeholder="friendly, concise, positive" />
+      </div>
+    </div>
+
+    <label for="includeTerms">Include Terms (comma-separated)</label>
+    <input id="includeTerms" type="text" placeholder="AI, productivity, leadership" />
+
+    <label for="excludeTerms">Exclude Terms (comma-separated)</label>
+    <input id="excludeTerms" type="text" placeholder="politics, NSFW" />
+
+    <button id="save" class="btn">Save Settings</button>
+    <div id="status" class="hint"></div>
+    <div style="margin-top:12px">
+      <label><input id="useAssistantsApi" type="checkbox" /> Use Assistants API (threads/runs)</label>
+    </div>
+  </div>
+
+  <script>
+    const apiKeyEl = document.getElementById('apiKey');
+    const assistantIdEl = document.getElementById('assistantId');
+    const defaultSearchQueryEl = document.getElementById('defaultSearchQuery');
+    const commentStyleEl = document.getElementById('commentStyle');
+    const includeTermsEl = document.getElementById('includeTerms');
+    const excludeTermsEl = document.getElementById('excludeTerms');
+    const statusEl = document.getElementById('status');
+
+    async function load() {
+      const s = await chrome.storage.local.get([
+        'openaiApiKey','assistantId','defaultSearchQuery','commentStyle','includeTerms','excludeTerms','useAssistantsApi'
+      ]);
+      document.getElementById('useAssistantsApi').checked = !!s.useAssistantsApi;
+      if (s.openaiApiKey) apiKeyEl.value = s.openaiApiKey;
+      if (s.assistantId) assistantIdEl.value = s.assistantId;
+      if (s.defaultSearchQuery) defaultSearchQueryEl.value = s.defaultSearchQuery;
+      if (s.commentStyle) commentStyleEl.value = s.commentStyle;
+      if (s.includeTerms) includeTermsEl.value = s.includeTerms;
+      if (s.excludeTerms) excludeTermsEl.value = s.excludeTerms;
+    }
+
+    async function save() {
+      try {
+        await chrome.storage.local.set({
+          openaiApiKey: apiKeyEl.value.trim(),
+          assistantId: assistantIdEl.value.trim(),
+          defaultSearchQuery: defaultSearchQueryEl.value.trim(),
+          commentStyle: commentStyleEl.value.trim(),
+          includeTerms: includeTermsEl.value.trim(),
+          excludeTerms: excludeTermsEl.value.trim(),
+          useAssistantsApi: document.getElementById('useAssistantsApi').checked
+        });
+        statusEl.textContent = 'Saved';
+        statusEl.className = 'success';
+        setTimeout(()=>{ statusEl.textContent=''; statusEl.className='hint'; }, 1500);
+      } catch (e) {
+        statusEl.textContent = 'Save failed: ' + e.message;
+        statusEl.className = 'error';
+      }
+    }
+
+    document.getElementById('save').addEventListener('click', save);
+    load();
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "name": "social-media-automation-extension",
+  "version": "1.0.0",
+  "description": "A Chrome extension that automates social media interactions using natural browser interactions",
+  "main": "manifest.json",
+  "scripts": {
+    "build": "echo 'No build process needed for this extension'",
+    "dev": "echo 'Load extension in Chrome as unpacked extension'",
+    "test": "echo 'No tests configured yet'",
+    "lint": "echo 'No linter configured yet'"
+  },
+  "keywords": [
+    "chrome-extension",
+    "social-media",
+    "automation",
+    "facebook",
+    "twitter",
+    "instagram",
+    "linkedin",
+    "youtube"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/social-media-automation-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/social-media-automation-extension/issues"
+  },
+  "homepage": "https://github.com/yourusername/social-media-automation-extension#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

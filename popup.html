@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Automation</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Social Media Automation</h1>
+            <div class="status-indicator" id="statusIndicator">
+                <span class="status-dot"></span>
+                <span class="status-text">Ready</span>
+            </div>
+        </header>
+
+        <div class="platform-selector">
+            <label for="platform">Platform:</label>
+            <select id="platform">
+                <option value="facebook">Facebook</option>
+                <option value="twitter">Twitter/X</option>
+                <option value="instagram">Instagram</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="youtube">YouTube</option>
+            </select>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="create">📝 Create Post</button>
+            <button class="tab-btn" data-tab="respond">💬 Respond</button>
+            <button class="tab-btn" data-tab="search">🔍 Search & Comment</button>
+            <button class="tab-btn" data-tab="follow">👥 Follow</button>
+        </div>
+
+        <div class="panels">
+            <section id="panel-create" class="panel active">
+                <div class="setting-item">
+                    <label for="contentTopic">Content Topic/Seed</label>
+                    <input type="text" id="contentTopic" placeholder="e.g. time management, eco-friendly tips" />
+                </div>
+                <div class="setting-item">
+                    <label for="tone">Tone / Style</label>
+                    <input type="text" id="tone" placeholder="concise, friendly, positive" />
+                </div>
+                <button id="runCreatePost" class="action-btn">Run Create Post</button>
+            </section>
+
+            <section id="panel-respond" class="panel">
+                <div class="setting-item">
+                    <label for="respondIncludeTerms">Reply only if includes (comma-separated)</label>
+                    <input type="text" id="respondIncludeTerms" placeholder="thanks, info, pricing" />
+                </div>
+                <div class="setting-item">
+                    <label for="respondExcludeTerms">Skip if includes (comma-separated)</label>
+                    <input type="text" id="respondExcludeTerms" placeholder="politics, NSFW" />
+                </div>
+                <div class="setting-item">
+                    <label for="respondTone">Reply tone</label>
+                    <input type="text" id="respondTone" placeholder="helpful, concise, friendly" />
+                </div>
+                <div class="setting-item">
+                    <label for="respondUseAi">Use AI</label>
+                    <input type="checkbox" id="respondUseAi" checked />
+                </div>
+                <button id="runRespond" class="action-btn">Run Respond</button>
+            </section>
+
+            <section id="panel-search" class="panel">
+                <div class="setting-item">
+                    <label for="searchQuery">Search query</label>
+                    <input type="text" id="searchQuery" placeholder="e.g. (productivity OR focus) -politics" />
+                </div>
+                <div class="setting-item">
+                    <label for="includeTermsInput">Include terms (comma-separated)</label>
+                    <input type="text" id="includeTermsInput" placeholder="AI, productivity" />
+                </div>
+                <div class="setting-item">
+                    <label for="excludeTermsInput">Exclude terms (comma-separated)</label>
+                    <input type="text" id="excludeTermsInput" placeholder="politics, NSFW" />
+                </div>
+                <div class="setting-item">
+                    <label for="useAi">Use AI assistant to write comments</label>
+                    <input type="checkbox" id="useAi" checked />
+                </div>
+                <button id="runSearchComment" class="action-btn">Run Search & Comment</button>
+            </section>
+
+            <section id="panel-follow" class="panel">
+                <div class="setting-item">
+                    <label for="followIncludeTerms">Follow if includes (comma-separated)</label>
+                    <input type="text" id="followIncludeTerms" placeholder="AI, leadership" />
+                </div>
+                <div class="setting-item">
+                    <label for="followExcludeTerms">Skip if includes (comma-separated)</label>
+                    <input type="text" id="followExcludeTerms" placeholder="giveaway, NSFW" />
+                </div>
+                <button id="runFollow" class="action-btn">Run Follow</button>
+            </section>
+        </div>
+
+        <div class="settings-section">
+            <h3>Search Controls</h3>
+            <div class="setting-item">
+                <label for="searchQuery">Search query</label>
+                <input type="text" id="searchQuery" placeholder="e.g. (productivity OR focus) -politics" />
+            </div>
+            <div class="setting-item">
+                <label for="includeTermsInput">Include terms (comma-separated)</label>
+                <input type="text" id="includeTermsInput" placeholder="AI, productivity" />
+            </div>
+            <div class="setting-item">
+                <label for="excludeTermsInput">Exclude terms (comma-separated)</label>
+                <input type="text" id="excludeTermsInput" placeholder="politics, NSFW" />
+            </div>
+            <div class="setting-item">
+                <label for="useAi">Use AI assistant to write comments</label>
+                <input type="checkbox" id="useAi" checked />
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Settings</h3>
+            <div class="setting-item">
+                <label for="delay">Action Delay (seconds):</label>
+                <input type="number" id="delay" value="2" min="1" max="10" step="0.5">
+            </div>
+            <div class="setting-item">
+                <label for="maxActions">Max Actions:</label>
+                <input type="number" id="maxActions" value="10" min="1" max="50">
+            </div>
+            <div class="setting-item">
+                <label for="contentTopic">Content Topic/Seed</label>
+                <input type="text" id="contentTopic" placeholder="e.g. time management, eco-friendly tips" />
+            </div>
+            <div class="setting-item">
+                <label for="tone">Tone / Style</label>
+                <input type="text" id="tone" placeholder="concise, friendly, positive" />
+            </div>
+        </div>
+
+        <div class="log-section">
+            <h3>Activity Log</h3>
+            <div id="logContainer" class="log-container"></div>
+            <div class="log-buttons">
+                <button id="clearLog" class="secondary-btn">Clear Log</button>
+                <button id="debugPage" class="secondary-btn">Debug Page</button>
+                <button id="stopAutomation" class="secondary-btn stop-btn">Stop All</button>
+                <button id="emergencyClear" class="secondary-btn emergency-btn">Emergency Clear</button>
+            </div>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
