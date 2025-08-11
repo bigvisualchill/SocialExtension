@@ -41,7 +41,7 @@ class SocialMediaAutomationEngine {
         if (hostname.includes('facebook.com')) this.platform = 'facebook';
         else if (hostname.includes('twitter.com')) this.platform = 'twitter';
         else if (hostname.includes('instagram.com')) this.platform = 'instagram';
-        else if (hostname.includes('linkedin.com')) this.platform = 'linkedin';
+
         else if (hostname.includes('youtube.com')) this.platform = 'youtube';
     }
 
@@ -472,29 +472,7 @@ class SocialMediaAutomationEngine {
                     followButton: 'button[aria-label*="Follow"], button[data-testid="follow"], button:contains("Follow")'
                 }
             },
-            linkedin: {
-                createPost: {
-                    postArea: '[data-testid="post-text-editor"], div[data-testid="post-text-editor"], textarea[placeholder*="What do you want to talk about"], div[contenteditable="true"][aria-label*="Text editor"]',
-                    postButton: '[data-testid="post-button"], button[data-testid="post-button"], button[aria-label*="Post"], button:contains("Post")'
-                },
-                respondToComments: {
-                    commentSection: '[data-testid="comment"], div[data-testid="comment"], article[data-testid="comment"]',
-                    replyButton: 'button[aria-label*="Reply"], button[data-testid="reply"], button:contains("Reply")',
-                    commentInput: '[data-testid="comment-input"], textarea[data-testid="comment-input"], textarea[placeholder*="Add a comment"], div[contenteditable="true"][aria-label*="Add a comment"]',
-                    submitButton: 'button[type="submit"], button[aria-label*="Post"], button:contains("Post")'
-                },
-                searchAndComment: {
-                    searchInput: 'input[placeholder*="Search"], input[aria-label*="Search"], input[name="q"]',
-                    searchButton: 'button[type="submit"], button[aria-label*="Search"]',
-                    posts: '[data-testid="post"], article[data-testid="post"], div[data-testid="post"]',
-                    commentButton: 'button[aria-label*="Comment"], button[data-testid="comment"], button:contains("Comment")',
-                    commentInput: '[data-testid="comment-input"], textarea[data-testid="comment-input"], textarea[placeholder*="Add a comment"]',
-                    submitButton: 'button[type="submit"], button[aria-label*="Post"], button:contains("Post")'
-                },
-                followUsers: {
-                    followButton: 'button[aria-label*="Follow"], button[data-testid="follow"], button:contains("Follow")'
-                }
-            },
+
             youtube: {
                 createPost: {
                     postArea: '#contenteditable-root, div[contenteditable="true"][aria-label*="Add a message"], textarea[placeholder*="Add a message"]',
